@@ -7,10 +7,11 @@ and replaces the login name with what has been returned.
 On the typical system this module performs an identity transform.
 The main usage scenario are systems in networks where a user name
 is used in several distinct authentication systems, some of them
-being case sensitive and others not. For example the main system
+being case sensitive and others not. For example the mail system
 may do case insensitive username lookups, while the workstations
 are case sensitive. In such environments users are often puzzeled
 about a username working in one situation does not work in another.
+
 Actually this module has been written for this very reason.
 
 CONFIGURATION
