@@ -7,5 +7,5 @@ clean:
 	rm *.o *.so
 
 install: pam_propperpwnam.so
-	install -o root -g root -m 644 pam_propperpwnam.so /lib/security/
+	install -o root -g root -m 644 pam_propperpwnam.so $(DESTDIR)/lib/security/
 
