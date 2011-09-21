@@ -1,14 +1,11 @@
-Source: pam-propperpwnam
-Priority: extra
-Maintainer: Wolfgang.Draxinger <Wolfgang.Draxinger@physik.uni-muenchen.de>
-Build-Depends: debhelper (>= 7), libpam0g-dev
-Standards-Version: 3.8.3
-Section: libs
-Homepage: https://github.com/datenwolf/pam_propperpwnam
-
 Package: pam-propperpwnam
-Architecture: any
-Depends: pam-propperpwnam (= ${binary:Version}), libpam0g
+Version: 0.1
+Architecture: amd64
+Maintainer: Wolfgang.Draxinger <Wolfgang.Draxinger@physik.uni-muenchen.de>
+Installed-Size: 52
+Depends: libpam0g
+Section: libs
+Priority: extra
+Homepage: https://github.com/datenwolf/pam_propperpwnam
 Description: Prop username per pwnam API
  Props the entered login credentials with user information retrieved per pwnam API (getpwnam)
-

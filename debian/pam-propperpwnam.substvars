@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.2.5), libpam0g (>= 0.99.7.1)
+misc:Depends=

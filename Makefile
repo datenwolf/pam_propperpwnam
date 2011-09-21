@@ -4,8 +4,9 @@ pam_propperpwnam.so: pam_propperpwnam.c
 .PHONY: clean
 
 clean:
-	rm *.o *.so
+	rm -f pam_propperpwnam.so
 
 install: pam_propperpwnam.so
-	install -o root -g root -m 644 pam_propperpwnam.so $(DESTDIR)/lib/security/
+	mkdir -p $(DESTDIR)/lib/security
+	install -o root -g root -m 644 -t $(DESTDIR)/lib/security/ pam_propperpwnam.so
 

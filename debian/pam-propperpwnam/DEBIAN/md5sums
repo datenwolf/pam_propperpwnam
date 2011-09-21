@@ -1,0 +1,4 @@
+b25d663638284add6aa983147c38c219  usr/share/doc/pam-propperpwnam/changelog.gz
+54cc06c0f2af13bd235074c425bc370e  usr/share/doc/pam-propperpwnam/README
+f995ead7ca8e8308b06c4cc33da3562f  usr/share/doc/pam-propperpwnam/copyright
+b1450c12bf17e035078188a5df5dafc2  lib/security/pam_propperpwnam.so
