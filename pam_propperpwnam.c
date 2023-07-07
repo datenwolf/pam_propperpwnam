@@ -30,12 +30,12 @@
 *
 *******************************************************************************
 *
-* a PAM module that sets the user loginname to the username
-* stored in the user databased using the loginname passed
-* as access key.
+* This PAM module sets the user login name to the username
+* stored in the user database using the login name passed
+* as an access key.
 *
 * Example usage scenario is adjusting the usernames' characters
-* case in  environments where case sensitive and case insensitive
+* case in environments where case sensitive and case insensitive
 * services are mixed (the module was initially developed for
 * this very usage scenario).
 */
