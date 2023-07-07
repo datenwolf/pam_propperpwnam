@@ -1,11 +1,21 @@
-pam_propperpwnam.so: pam_propperpwnam.c
-	$(CC) -shared -fPIC -o pam_propperpwnam.so pam_propperpwnam.c -lpam
+CFLAGS ?= -Wall -O2 -fPIC
+LDFLAGS ?= -shared
+LDLIBS ?= -lpam
+DESTDIR ?=
+INSTALL ?= install -D -p -o root -g root -m 644
+SECUREDIR ?= /lib/security
 
-.PHONY: clean
+.PHONY: all clean install
+
+.SUFFIXES: .c .so
+
+.c.so:
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+all: pam_propperpwnam.so
 
 clean:
-	rm *.o *.so
+	-rm *.so
 
 install: pam_propperpwnam.so
-	install -o root -g root -m 644 pam_propperpwnam.so /lib/security/
-
+	$(INSTALL) $< $(DESTDIR)$(SECUREDIR)/$<
