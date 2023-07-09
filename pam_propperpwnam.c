@@ -30,18 +30,19 @@
 *
 *******************************************************************************
 *
-* a PAM module that sets the user loginname to the username
-* stored in the user databased using the loginname passed
-* as access key.
+* This PAM module sets the user login name to the username
+* stored in the user database using the login name passed
+* as an access key.
 *
 * Example usage scenario is adjusting the usernames' characters
-* case in  environments where case sensitive and case insensitive
+* case in environments where case sensitive and case insensitive
 * services are mixed (the module was initially developed for
 * this very usage scenario).
 */
 
 #include <stdlib.h>
-#include <sys/types.h>
+#include <string.h>
+#include <syslog.h>
 #include <unistd.h>
 #include <pwd.h>
 
@@ -52,10 +53,14 @@
 #define PAM_SM_AUTH
 
 #include <security/pam_modules.h>
-#include <security/_pam_macros.h>
+#include <security/pam_modutil.h>
+#include <security/pam_ext.h>
 
-PAM_EXTERN int
-pam_sm_setcred(pam_handle_t *pamh, int flags, int argc, const char **argv)
+PAM_EXTERN int pam_sm_setcred(
+	pam_handle_t *pamh,
+	int flags,
+	int argc,
+	char const *argv[] )
 {
 	return PAM_SUCCESS;
 }
@@ -66,53 +71,34 @@ PAM_EXTERN int pam_sm_authenticate(
 	int argc,
 	char const *argv[] )
 {
-	int error;
-	char *entered_username;
-
-	struct passwd pwd;
-	struct passwd *pwd_result;
-	char *pwd_buf;
-	size_t pwd_bufsize;
+	const char *username;
+	struct passwd *pw;
 
 #if DEBUG
 	fprintf(stderr, "pam_propperpwnam called\n");
 #endif
 
-	error = pam_get_user(pamh, (char const **)&entered_username, 0);
-	if(PAM_SUCCESS != error)
+	if( pam_get_user(pamh, &username, 0) != PAM_SUCCESS ) {
+		pam_syslog(pamh, LOG_NOTICE, "cannot determine user name");
 		return PAM_USER_UNKNOWN;
-
-#if DEBUG	
-	fprintf(stderr, "pam_propperpwnam entered username is %s\n", entered_username);
-#endif
-
-	pwd_bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
-	if( -1 == pwd_bufsize )          /* Value was indeterminate */
-		pwd_bufsize = 16384;        /* Should be more than enough */
-
-	pwd_buf = malloc( pwd_bufsize );
-	if( !pwd_buf ) {
-		return PAM_AUTH_ERR;
 	}
 
-	error = getpwnam_r(entered_username, &pwd, pwd_buf, pwd_bufsize, &pwd_result);
-	if( !pwd_result ) {
-		free(pwd_buf);
-		if( !error )
-			return PAM_USER_UNKNOWN;
-		return PAM_AUTH_ERR;
+#if DEBUG	
+	fprintf(stderr, "pam_propperpwnam entered username is %s\n", username);
+#endif
+
+	pw = pam_modutil_getpwnam(pamh, username);
+	if( !pw ) {
+		pam_syslog(pamh, LOG_NOTICE, "User unknown");
+		return PAM_USER_UNKNOWN;
 	}
 
 #if DEBUG
-	fprintf(stderr, "pam_propperpwnam propper username is %s\n", pwd_result->pw_name);
+	fprintf(stderr, "pam_propperpwnam propper username is %s\n", pw->pw_name);
 #endif
 
-	error = pam_set_item(pamh, PAM_USER, pwd_result->pw_name);
-	free( pwd_buf );
-	if( PAM_SUCCESS != error ) {
-		return PAM_AUTH_ERR;
-	}
+	if( strcmp(username, pw->pw_name) != 0 )
+	       return pam_set_item(pamh, PAM_USER, pw->pw_name);
 
 	return PAM_SUCCESS;
 }
-

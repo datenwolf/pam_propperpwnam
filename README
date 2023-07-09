@@ -1,24 +1,24 @@
 pam_propperpwnam
 
-A PAM module that uses the entered login name as key to
-query the password database configured through nsswitch.conf
+This PAM module uses the entered login name as a key to query
+the password database configured through nsswitch.conf
 and replaces the login name with what has been returned.
 
-On the typical system this module performs an identity transform.
+On the typical system this module performs an identity transformation.
 The main usage scenario are systems in networks where a user name
 is used in several distinct authentication systems, some of them
-being case sensitive and others not. For example the mail system
+being case sensitive and others not. For example, the mail system
 may do case insensitive username lookups, while the workstations
-are case sensitive. In such environments users are often puzzeled
-about a username working in one situation does not work in another.
+are case sensitive. In such environments users are often puzzled
+when a username working in one situation does not work in another.
 
-Actually this module has been written for this very reason.
+Actually, this module has been written for this very reason.
 
 CONFIGURATION
 
 pam_propperpwnam.so needs no configuration except adding it as "optional"
-early in in the list of PAM modules executed for user authentication.
-A good place in most distributions is /etc/pam.d/common-auth
+early in the list of PAM modules executed for user authentication.
+A good place in most distributions is /etc/pam.d/common-auth file.
 
 Example configuration, authentication with rewritten username against
 Kerberos5 infrastructure:
